@@ -1,0 +1,26 @@
+.switch {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+}
+.switch .fa {
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+}
+.switch .fa:hover {
+  color: #555e6d;
+}
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.disabled i {
+  pointer-events: none;
+}
+.switch .fa-toggle-on {
+  color: #32c094;
+}

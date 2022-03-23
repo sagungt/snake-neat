@@ -1,14 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import App from "./App";
+import Factory from "./Factory";
+import Play from "./Play";
+import AutoAI from "./AutoAI";
+import AutoAstar from "./AutoAstar";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="auto-astar" element={<AutoAstar />} />
+        <Route path="auto-ai" element={<AutoAI />} />
+        <Route path="play" element={<Play />} />
+        <Route path="train" element={<Factory />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
