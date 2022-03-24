@@ -1,52 +1,41 @@
 import { distance, angleToPoint, radiansToDegrees } from "../helper/Helper";
 import { ISnakeConfig } from "../interfaces";
 
-// TODO refactor if necessary
 export default class Snake {
   public firstAttempScore: number;
   private config: ISnakeConfig;
   private state: any;
-  private canvas: any;
   private brain: any;
-  private currentScore: number;
+  public currentScore: number;
   private bestScore: number;
-  private deaths: number;
-  private maxDeaths: number;
-  private highScore: number;
+  public deaths: number;
   private gamesPlayed: number;
   private direction: number;
   private turnAngle: number;
-  private lastDirection: any;
   private lastDistance: any;
   private dead: boolean;
-  private theta: any;
+  private theta: string;
   private checks: any;
   private data: any;
   private key: string;
   private score: number;
   private ratio: { x: number; y: number };
 
-  constructor(config: ISnakeConfig, genome?: any, canvas?: HTMLCanvasElement) {
+  constructor(config: ISnakeConfig, genome?: any) {
     this.config = config;
-    this.canvas = canvas || null;
     this.brain = genome || null;
     this.state = {};
-    if (this.brain) {
-      this.brain.score = 0;
-    }
+    if (this.brain) this.brain.score = 0;
     this.currentScore = 0;
     this.firstAttempScore = 0;
     this.bestScore = 0;
     this.deaths = 0;
-    this.maxDeaths = 0;
-    this.highScore = 0;
     this.gamesPlayed = -1;
     this.direction = 90;
     this.turnAngle = 90;
-    this.lastDirection = undefined;
     this.lastDistance = config.displaySize.x / config.gridSize;
     this.dead = false;
-    this.theta = null;
+    this.theta = "";
     this.checks = null;
     this.key = "straight";
     this.score = 0;
@@ -78,7 +67,6 @@ export default class Snake {
     return this.deaths > 0;
   }
 
-  // TODO refactor if necessary
   look() {
     if (this.dead) return;
 
@@ -88,15 +76,13 @@ export default class Snake {
       x2: this.state.food.x,
       y2: this.state.food.y,
     });
-
     const d = radiansToDegrees(a);
-
     let theta = d + 90;
+
     if (theta > 180) theta -= 360;
     theta += this.direction;
 
     if (theta > 180) theta -= 360;
-
     this.theta = theta.toFixed(2);
     theta /= 180;
 
@@ -138,26 +124,25 @@ export default class Snake {
       ];
     }
 
-    for (let i in this.checks) {
-      const tx = this.checks[i].x + head.x;
-      const ty = this.checks[i].y + head.y;
+    for (let check of this.checks) {
+      const tx = check.x + head.x;
+      const ty = check.y + head.y;
 
       if (tx < 0 || tx >= this.ratio.x) {
         data.push(1);
-        this.checks[i].hit = true;
+        check.hit = true;
         continue;
       }
 
       if (tx < 0 || ty >= this.ratio.y) {
         data.push(1);
-        this.checks[i].hit = true;
+        check.hit = true;
         continue;
       }
 
       let bodyHit = false;
-      for (let j in this.state.body) {
-        const b = this.state.body[j];
-        if (b.x === tx && b.y === ty) {
+      for (let body of this.state.body) {
+        if (body.x === tx && body.y === ty) {
           bodyHit = true;
           break;
         }
@@ -165,17 +150,16 @@ export default class Snake {
 
       if (bodyHit) {
         data.push(1);
-        this.checks[i].hit = true;
+        check.hit = true;
         continue;
       }
-      this.checks[i].hit = false;
+      check.hit = false;
       data.push(0);
     }
 
     this.data = data;
   }
 
-  // TODO refactor if necessary
   restart() {
     const body = [];
     const rows = [];
@@ -183,7 +167,7 @@ export default class Snake {
     for (let x = 0; x < this.ratio.x; x += 1) {
       const d = [];
       for (let y = 0; y < this.ratio.y; y += 1) {
-        d.push({ x: x, y: y });
+        d.push({ x, y });
       }
       rows.push(d);
     }
@@ -201,15 +185,14 @@ export default class Snake {
     }
 
     this.state = {
-      rows: rows,
-      body: body,
+      rows,
+      body,
       food: { x: -1, y: -1 },
     };
 
     this.currentScore = 0;
     this.direction = 90;
     this.gamesPlayed += 1;
-    this.lastDirection = undefined;
     this.lastDistance = this.config.displaySize.x / this.config.gridSize;
   }
 
@@ -222,11 +205,8 @@ export default class Snake {
         y: parseInt(`${this.ratio.y * Math.random()}`, 10),
       };
       let found = false;
-      for (let i in this.state.body) {
-        if (
-          this.state.body[i].x === tfood.x &&
-          this.state.body[i].y === tfood.y
-        ) {
+      for (let body of this.state.body) {
+        if (body.x === tfood.x && body.y === tfood.y) {
           found = true;
           break;
         }
@@ -250,12 +230,12 @@ export default class Snake {
 
   showCanvas(
     context: CanvasRenderingContext2D,
-    offsetX?: number,
-    offsetY?: number
+    offsetX: number = 0,
+    offsetY: number = 0
   ) {
     context.clearRect(
-      offsetX ? offsetX : 0,
-      offsetY ? offsetY : 0,
+      offsetX,
+      offsetY,
       this.config.displaySize.x,
       this.config.displaySize.y
     );
@@ -263,14 +243,13 @@ export default class Snake {
     context.fillStyle = "#000";
     if (this.deaths > 0) context.fillStyle = "#bbb";
 
-    for (let i in this.state.body) {
+    for (let body of this.state.body) {
       context.globalAlpha =
         (this.state.body.length - 1) / this.state.body.length / 2 + 0.5;
 
-      const d = this.state.body[i];
       context.fillRect(
-        d.x * this.config.gridSize + (offsetX ? offsetX : 0),
-        d.y * this.config.gridSize + (offsetY ? offsetY : 0),
+        body.x * this.config.gridSize + offsetX,
+        body.y * this.config.gridSize + offsetY,
         this.config.gridSize,
         this.config.gridSize
       );
@@ -280,10 +259,8 @@ export default class Snake {
     context.fillStyle = "#2c4";
     context.beginPath();
     context.arc(
-      (this.state.food.x + 0.5) * this.config.gridSize +
-        (offsetX ? offsetX : 0),
-      (this.state.food.y + 0.5) * this.config.gridSize +
-        (offsetY ? offsetY : 0),
+      (this.state.food.x + 0.5) * this.config.gridSize + offsetX,
+      (this.state.food.y + 0.5) * this.config.gridSize + offsetY,
       this.config.gridSize / 2,
       0,
       2 * Math.PI
@@ -303,7 +280,11 @@ export default class Snake {
     );
   }
 
-  move(context: CanvasRenderingContext2D, offsetX?: number, offsetY?: number) {
+  move(
+    context: CanvasRenderingContext2D,
+    offsetX: number = 0,
+    offsetY: number = 0
+  ) {
     const head = JSON.parse(JSON.stringify(this.state.body[0]));
     if (this.direction === 0) {
       head.y -= 1;
@@ -356,22 +337,34 @@ export default class Snake {
 
     if (died) {
       context.clearRect(
-        offsetX ? offsetX : 0,
-        offsetY ? offsetY : 0,
+        offsetX,
+        offsetY,
         this.config.displaySize.x,
         this.config.displaySize.y
       );
       context.fillStyle = "rgba(255,0,0,.5)";
 
-      for (let i in this.state.body) {
-        const d = this.state.body[i];
+      for (let body of this.state.body) {
         context.fillRect(
-          d.x * this.config.gridSize + (offsetX ? offsetX : 0),
-          d.y * this.config.gridSize + (offsetY ? offsetY : 0),
+          body.x * this.config.gridSize + offsetX,
+          body.y * this.config.gridSize + offsetY,
           this.config.gridSize,
           this.config.gridSize
         );
       }
+
+      context.globalAlpha = 1;
+      context.fillStyle = "#2c4";
+      context.beginPath();
+      context.arc(
+        (this.state.food.x + 0.5) * this.config.gridSize + offsetX,
+        (this.state.food.y + 0.5) * this.config.gridSize + offsetY,
+        this.config.gridSize / 2,
+        0,
+        2 * Math.PI
+      );
+
+      context.fill();
 
       this.deaths += 1;
       return;
@@ -446,8 +439,6 @@ export default class Snake {
 
     let eating = false;
     if (!died) {
-      // console.log(this.currentScore);
-
       if (head.x === this.state.food.x && head.y === this.state.food.y) {
         eating = true;
 
@@ -473,7 +464,6 @@ export default class Snake {
       }
 
       this.lastDistance = d;
-      // if (eating) this.makeFood();
     }
 
     if (this.currentScore > this.brain.score) {
@@ -489,11 +479,10 @@ export default class Snake {
       context.clearRect(0, 0, 100, 100);
       context.fillStyle = "rgba(255,0,0,.5)";
 
-      for (let i in this.state.body) {
-        const d = this.state.body[i];
+      for (let body of this.state.body) {
         context.fillRect(
-          d.x * this.config.gridSize,
-          d.y * this.config.gridSize,
+          body.x * this.config.gridSize,
+          body.y * this.config.gridSize,
           this.config.gridSize,
           this.config.gridSize
         );

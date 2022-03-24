@@ -4,13 +4,13 @@ import "../styles/slider.css";
 interface Props {
   min: number;
   max: number;
-  value: number;
   name: string;
-  description?: string;
+  value: number;
   onChangeEvent: Function;
+  description?: string;
   disabled?: boolean;
-  step?: number;
   required?: boolean;
+  step?: number;
 }
 
 export default function Slider(props: Props) {

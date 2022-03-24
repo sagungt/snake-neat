@@ -3,8 +3,8 @@ import "../styles/switch.css";
 
 interface Props {
   value: boolean;
-  onToggle: React.MouseEventHandler<HTMLButtonElement>;
   label: string;
+  onToggle: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
 }
 

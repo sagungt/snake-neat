@@ -54,6 +54,7 @@ export default function Factory() {
     manager.resume();
   };
 
+  // TODO implement save config and model
   const getBestModel = () => {
     console.log(manager.getBestModel());
   };

@@ -9,11 +9,11 @@ const Methods = neataptic.methods;
 const Architect = neataptic.architect;
 
 export default class Manager {
-  private neat: any;
-  private snakes: any;
-  private generationLog: any;
-  private generationTimeLog: any;
-  private iterationCounter: any;
+  private neat: typeof Neat;
+  private snakes: Snake[];
+  private generationLog: Array<any>;
+  private generationTimeLog: Array<any>;
+  private iterationCounter: number;
   private mutationRate: number;
   private inputSize: number;
   private startHiddenSize: number;
@@ -31,6 +31,10 @@ export default class Manager {
     this.started = false;
     this.paused = false;
     this.config = config;
+    this.snakes = [];
+    this.generationLog = [];
+    this.generationTimeLog = [];
+    this.iterationCounter = 0;
   }
 
   getBestModel() {
@@ -117,7 +121,6 @@ export default class Manager {
     this.tick();
   }
 
-  // TODO refactor if necessary
   tick() {
     if (!this.started || this.paused) return;
 
@@ -162,14 +165,15 @@ export default class Manager {
         const canvas = document.getElementById(
           "snake-canvas-" + tSnakes[i].index
         ) as HTMLCanvasElement;
+        const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
         if (
           parseInt(i, 10) <
           (this.config.populationSize * this.config.elitismPercent) / 100
         ) {
-          this.snakes[tSnakes[i].index].bragCanvas(canvas.getContext("2d"));
+          this.snakes[tSnakes[i].index].bragCanvas(context);
           top = true;
         } else {
-          this.snakes[tSnakes[i].index].hideCanvas(canvas.getContext("2d"));
+          this.snakes[tSnakes[i].index].hideCanvas(context);
         }
 
         newLog.push({
@@ -196,7 +200,7 @@ export default class Manager {
           const canvas = document.getElementById(
             "snake-canvas-" + i
           ) as HTMLCanvasElement;
-          const context = canvas.getContext("2d");
+          const context = canvas.getContext("2d") as CanvasRenderingContext2D;
           this.snakes[i].showCanvas(context);
           this.snakes[i].moveWithPredict(context);
         }
@@ -206,7 +210,6 @@ export default class Manager {
     }
   }
 
-  // TODO refactor if necessary
   breed() {
     this.neat.sort();
     const newPopulation = [];
@@ -240,8 +243,8 @@ export default class Manager {
 
   updateSettings(newConfig: IManagerConfig) {
     this.config = newConfig;
-    for (let i in this.snakes) {
-      this.snakes[i].config = this.config;
+    for (const snake of this.snakes) {
+      snake.setConfig(this.config);
     }
   }
 
@@ -313,40 +316,32 @@ export default class Manager {
 
     const netSvg = genSvg
       .selectAll("net")
-      .data((d: any) => {
-        return d;
-      })
+      .data((d: any) => d)
       .enter();
 
     netSvg
       .append("circle")
       .attr("cx", (d: any) => xScale(d.generation))
       .attr("cy", (d: any) => yScale(d.score))
-      .attr("opacity", (d: any) => {
-        if (d.top) return 0.8;
-        return 0.25;
-      })
+      .attr("opacity", (d: any) => (d.top ? 0.8 : 0.25))
       .attr("r", 2.5)
-      .attr("fill", (d: any) => {
-        if (d.top) return "#3aa3e3";
-        return "#000";
-      });
+      .attr("fill", (d: any) => (d.top ? "#3aa3e3" : "#000"));
 
     const medianLine: any = [];
     const q1Line: any = [];
     const q3Line: any = [];
 
-    for (let i in this.generationLog) {
+    for (const [i, generation] of this.generationLog) {
       medianLine.push({
-        score: calculateQ(this.generationLog[i], 0.5),
+        score: calculateQ(generation, 0.5),
         generation: parseInt(i, 10),
       });
       q1Line.push({
-        score: calculateQ(this.generationLog[i], 0.25),
+        score: calculateQ(generation, 0.25),
         generation: parseInt(i, 10),
       });
       q3Line.push({
-        score: calculateQ(this.generationLog[i], 0.75),
+        score: calculateQ(generation, 0.75),
         generation: parseInt(i, 10),
       });
     }

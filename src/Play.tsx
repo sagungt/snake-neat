@@ -36,26 +36,20 @@ export default function Play() {
     switch (key) {
       case "ArrowUp":
         direction = 0;
-        // setDirection(0);
         break;
       case "ArrowRight":
         direction = 90;
-        // setDirection(90);
         break;
       case "ArrowDown":
         direction = 180;
-        // setDirection(180);
         break;
       case "ArrowLeft":
         direction = 270;
-        // setDirection(270);
         break;
       default:
         break;
     }
-    // console.log(key);
     if (Math.abs(snake!.getDirection() - direction) === 180) return;
-
     setTimeout(() => {
       snake!.setDirection(direction);
     }, 50);
@@ -68,44 +62,31 @@ export default function Play() {
       height: number,
       ratio: any
     ) => {
+      const adjustedHeight = (canvas.current!.height - height) / 2;
+      const adjustedWidth = (canvas.current!.width - width) / 2;
       canvasCtx!.strokeStyle = "#ccc";
       canvasCtx?.beginPath();
-      canvasCtx?.moveTo(
-        (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
-      canvasCtx?.lineTo(
-        (canvas.current!.width - width) / 2,
-        height + (canvas.current!.height - height) / 2
-      );
-      canvasCtx?.lineTo(
-        width + (canvas.current!.width - width) / 2,
-        height + (canvas.current!.height - height) / 2
-      );
-      canvasCtx?.lineTo(
-        width + (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
-      canvasCtx?.lineTo(
-        (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
+      canvasCtx?.moveTo(adjustedWidth, adjustedHeight);
+      canvasCtx?.lineTo(adjustedWidth, height + adjustedHeight);
+      canvasCtx?.lineTo(width + adjustedWidth, height + adjustedHeight);
+      canvasCtx?.lineTo(width + adjustedWidth, adjustedHeight);
+      canvasCtx?.lineTo(adjustedWidth, adjustedHeight);
       canvasCtx?.stroke();
       for (let j = 0; j < ratio.x; j += 1) {
-        const x1 = (canvas.current!.width - width) / 2 + j * gridSize;
-        const x2 = height + (canvas.current!.height - height) / 2;
+        const x1 = adjustedWidth + j * gridSize;
+        const x2 = height + adjustedHeight;
         canvasCtx!.strokeStyle = "#ccc";
         canvasCtx?.beginPath();
-        canvasCtx?.moveTo(x1, (canvas.current!.height - height) / 2);
+        canvasCtx?.moveTo(x1, adjustedHeight);
         canvasCtx?.lineTo(x1, x2);
         canvasCtx?.stroke();
       }
       for (let i = 0; i < ratio.y; i += 1) {
-        const x1 = (canvas.current!.height - height) / 2 + i * gridSize;
-        const x2 = width + (canvas.current!.width - width) / 2;
+        const x1 = adjustedHeight + i * gridSize;
+        const x2 = width + adjustedWidth;
         canvasCtx!.strokeStyle = "#ccc";
         canvasCtx?.beginPath();
-        canvasCtx?.moveTo((canvas.current!.width - width) / 2, x1);
+        canvasCtx?.moveTo(adjustedWidth, x1);
         canvasCtx?.lineTo(x2, x1);
         canvasCtx?.stroke();
       }
@@ -119,23 +100,15 @@ export default function Play() {
     ) as CanvasRenderingContext2D;
     canvas.current!.height = window.innerHeight;
     canvas.current!.width = window.innerWidth;
-    const width = canvas.current!.width - (canvas.current!.width % gridSize),
-      height = canvas.current!.height - (canvas.current!.height % gridSize);
+    const width = canvas.current!.width - (canvas.current!.width % gridSize);
+    const height = canvas.current!.height - (canvas.current!.height % gridSize);
     const ratio = { x: width / gridSize, y: height / gridSize };
+    const adjustedHeight = (canvas.current!.height - height) / 2;
+    const adjustedWidth = (canvas.current!.width - width) / 2;
 
     canvasCtx!.fillStyle = "#fff";
-    canvasCtx?.fillRect(
-      (canvas.current!.width - width) / 2,
-      (canvas.current!.height - height) / 2,
-      width,
-      height
-    );
-    if (snake)
-      snake!.showCanvas(
-        canvasCtx,
-        (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
+    canvasCtx?.fillRect(adjustedWidth, adjustedHeight, width, height);
+    if (snake) snake!.showCanvas(canvasCtx, adjustedWidth, adjustedHeight);
     if (showGrid) drawGrid(canvasCtx, width, height, ratio);
   }, [gridSize, showGrid, drawGrid]);
 
@@ -143,10 +116,6 @@ export default function Play() {
     document.title = "Play Snake";
     canvasSetup();
     window.addEventListener("keydown", moveHandler);
-    // (window.onload = () => {
-    //   canvasSetup();
-    // })();
-    // return window.removeEventListener("keydown", moveHandler);
   }, [gridSize, canvasSetup]);
 
   const onChangeGridSlider = (val: number) => {
@@ -164,29 +133,17 @@ export default function Play() {
       const canvasCtx = canvas.current?.getContext(
         "2d"
       ) as CanvasRenderingContext2D;
-      const width = canvas.current!.width - (canvas.current!.width % gridSize),
-        height = canvas.current!.height - (canvas.current!.height % gridSize);
+      const width = canvas.current!.width - (canvas.current!.width % gridSize);
+      const height =
+        canvas.current!.height - (canvas.current!.height % gridSize);
       const ratio = { x: width / gridSize, y: height / gridSize };
-      snake!.showCanvas(
-        canvasCtx,
-        (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
-      snake!.move(
-        canvasCtx,
-        (canvas.current!.width - width) / 2,
-        (canvas.current!.height - height) / 2
-      );
-      // snake.setDirection(
-      //   Math.abs(
-      //     snake.getDirection() - direction === 180
-      //       ? snake.getDirection()
-      //       : direction
-      //   )
-      // );
-      const el = scoreElement.current;
+      const adjustedHeight = (canvas.current!.height - height) / 2;
+      const adjustedWidth = (canvas.current!.width - width) / 2;
+      const element = scoreElement.current;
       const score = snake!.getScore();
-      if (el) el.innerHTML = `${score}`;
+      snake!.showCanvas(canvasCtx, adjustedWidth, adjustedHeight);
+      snake!.move(canvasCtx, adjustedWidth, adjustedHeight);
+      if (element) element.innerHTML = `${score}`;
       if (showGrid) drawGrid(canvasCtx, width, height, ratio);
       if (snake!.isDead()) clearInterval(loop);
       if (increment && snakeSpeed > 50) {
@@ -199,8 +156,8 @@ export default function Play() {
   };
 
   const snakeInit = () => {
-    const width = canvas.current!.width - (canvas.current!.width % gridSize),
-      height = canvas.current!.height - (canvas.current!.height % gridSize);
+    const width = canvas.current!.width - (canvas.current!.width % gridSize);
+    const height = canvas.current!.height - (canvas.current!.height % gridSize);
     setConfig({
       ...config,
       displaySize: {
@@ -221,9 +178,7 @@ export default function Play() {
     document.querySelector(".menu-container")?.classList.toggle("hide");
     setPlay(true);
     setPause(false);
-    if (snake === undefined) {
-      snakeInit();
-    }
+    if (snake === undefined) snakeInit();
     start(speed);
   };
 
@@ -264,7 +219,8 @@ export default function Play() {
         {play ? (
           <>
             <h2>
-              Score : <span ref={scoreElement}></span>
+              Score :{" "}
+              <span ref={scoreElement}>{snake ? snake!.getScore() : 0}</span>
             </h2>
           </>
         ) : (

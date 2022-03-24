@@ -4,15 +4,15 @@ import "../styles/field.css";
 interface Props {
   type: string;
   name: string;
-  placeholder: string;
-  required: boolean;
   value: number;
-  onChangeEvent: Function;
-  disabled?: boolean;
+  required: boolean;
+  placeholder: string;
   description: string;
+  onChangeEvent: Function;
   min?: number;
   max?: number;
   step?: number;
+  disabled?: boolean;
   minLength?: number;
   maxLength?: number;
 }
