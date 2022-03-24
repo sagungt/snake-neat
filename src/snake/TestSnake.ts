@@ -1,6 +1,7 @@
 import { distance, angleToPoint, radiansToDegrees } from "../helper/Helper";
 import { ISnakeConfig } from "../interfaces";
 
+// TODO refactor if necessary
 export default class Snake {
   public firstAttempScore: number;
   private config: ISnakeConfig;
@@ -77,6 +78,7 @@ export default class Snake {
     return this.deaths > 0;
   }
 
+  // TODO refactor if necessary
   look() {
     if (this.dead) return;
 
@@ -173,6 +175,7 @@ export default class Snake {
     this.data = data;
   }
 
+  // TODO refactor if necessary
   restart() {
     const body = [];
     const rows = [];

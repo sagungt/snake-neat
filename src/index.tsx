@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import Factory from "./Factory";
 import Play from "./Play";
 import AutoAI from "./AutoAI";
 import AutoAstar from "./AutoAstar";
+import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>

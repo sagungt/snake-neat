@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+// TODO implement autoplay snake with A* algorithm
 export default function AutoAstar() {
   const [play, setPlay] = useState(false);
   const [pause, setPause] = useState(false);

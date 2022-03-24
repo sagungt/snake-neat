@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+// TODO implement autoplay snake with AI
 export default function AutoAI() {
   const [play, setPlay] = useState(false);
   const [pause, setPause] = useState(false);

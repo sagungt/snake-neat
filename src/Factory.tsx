@@ -100,7 +100,7 @@ export default function Factory() {
               Stop Evolution
             </div>
             <div className="btn btn-primary" onClick={getBestModel}>
-              Save Best Model
+              Save Config + Model
             </div>
           </>
         ) : (
@@ -137,7 +137,7 @@ export default function Factory() {
           required={true}
           value={config.populationSize}
           onChangeEvent={(v: number) => {
-            setConfig({ ...config, populationSize: v || 10 });
+            setConfig({ ...config, populationSize: v || 2 });
             // if (manager) manager.updateSettings(config);
           }}
           disabled={running}
@@ -211,7 +211,7 @@ export default function Factory() {
           required={true}
           value={config.initialSnakeLength}
           onChangeEvent={(v: number) => {
-            setConfig({ ...config, initialSnakeLength: v || 4 });
+            setConfig({ ...config, initialSnakeLength: v || 1 });
             if (manager) manager.updateSettings(config);
           }}
           description="Measured in grid cells."
@@ -227,11 +227,11 @@ export default function Factory() {
           required={true}
           value={config.gridSize}
           onChangeEvent={(v: number) => {
-            setConfig({ ...config, gridSize: v || 5 });
+            setConfig({ ...config, gridSize: v || 1 });
             if (manager) manager.updateSettings(config);
           }}
           description="Size of each Snake's grid environment."
-          min={5}
+          min={1}
           step={1}
         />
 
@@ -242,7 +242,7 @@ export default function Factory() {
           required={true}
           value={config.displaySize.x}
           onChangeEvent={(v: number) => {
-            setConfig({ ...config, displaySize: { x: v || 100, y: v || 100 } });
+            setConfig({ ...config, displaySize: { x: v || 10, y: v || 10 } });
             if (manager) manager.updateSettings(config);
           }}
           description="Does not affect game-play."

@@ -34,6 +34,7 @@ export default class Manager {
   }
 
   getBestModel() {
+    // TODO export model + config
     return this.neat.getFittest().toJSON();
   }
 
@@ -116,6 +117,7 @@ export default class Manager {
     this.tick();
   }
 
+  // TODO refactor if necessary
   tick() {
     if (!this.started || this.paused) return;
 
@@ -204,6 +206,7 @@ export default class Manager {
     }
   }
 
+  // TODO refactor if necessary
   breed() {
     this.neat.sort();
     const newPopulation = [];

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./styles/app.css";
 
+// TODO implement autoplay snake in background
 export default function App() {
   const canvasSetup = () => {
     const canvas = document.getElementById("bg") as HTMLCanvasElement;
