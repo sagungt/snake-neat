@@ -1,50 +1,81 @@
-import { distance, angleToPoint, radiansToDegrees } from "../helper/Helper";
-import { ISnakeConfig } from "../interfaces";
+import {
+  radiansToDegrees,
+  angleToPoint,
+  arrayIsEqual,
+  distance,
+  zeros,
+} from "../helper/Helper";
+import { ICoordinate, ISnakeConfig } from "../interfaces";
+import Astar from "./Astar";
+import AstarV2 from "./AstarV2";
+import { Grid } from "./Grid";
 
 export default class Snake {
-  public firstAttempScore: number;
+  private pathToFood: Array<ICoordinate>;
+  public firstAttemptScore: number;
   private config: ISnakeConfig;
-  private state: any;
-  private brain: any;
-  public currentScore: number;
-  private bestScore: number;
-  public deaths: number;
+  private currentScore: number;
   private gamesPlayed: number;
+  private ratio: ICoordinate;
   private direction: number;
   private turnAngle: number;
   private lastDistance: any;
+  private bestScore: number;
+  private deaths: number;
   private dead: boolean;
   private theta: string;
-  private checks: any;
-  private data: any;
-  private key: string;
   private score: number;
-  private ratio: { x: number; y: number };
+  private checks: any;
+  private key: string;
+  private grid!: Grid;
+  private brain: any;
+  private state: any;
+  private data: any;
 
   constructor(config: ISnakeConfig, genome?: any) {
-    this.config = config;
-    this.brain = genome || null;
-    this.state = {};
-    if (this.brain) this.brain.score = 0;
-    this.currentScore = 0;
-    this.firstAttempScore = 0;
-    this.bestScore = 0;
-    this.deaths = 0;
-    this.gamesPlayed = -1;
-    this.direction = 90;
-    this.turnAngle = 90;
     this.lastDistance = config.displaySize.x / config.gridSize;
-    this.dead = false;
-    this.theta = "";
-    this.checks = null;
-    this.key = "straight";
-    this.score = 0;
     this.ratio = {
       x: config.displaySize.x / config.gridSize,
       y: config.displaySize.y / config.gridSize,
     };
+    if (config.astarVersion === 2) {
+      this.grid = new Grid(zeros([this.ratio.x, this.ratio.y], 1));
+    }
+    if (this.brain) this.brain.score = 0;
+    this.brain = genome || null;
+    this.firstAttemptScore = 0;
+    this.key = "straight";
+    this.currentScore = 0;
+    this.gamesPlayed = -1;
+    this.config = config;
+    this.pathToFood = [];
+    this.direction = 90;
+    this.turnAngle = 90;
+    this.bestScore = 0;
+    this.checks = null;
+    this.dead = false;
+    this.state = {};
+    this.deaths = 0;
+    this.theta = "";
+    this.score = 0;
     this.restart();
     this.makeFood();
+  }
+
+  getDeaths(): number {
+    return this.deaths;
+  }
+
+  getCurrentScore(): number {
+    return this.currentScore;
+  }
+
+  getFirstAttemptScore(): number {
+    return this.firstAttemptScore;
+  }
+
+  getBody() {
+    return this.state.body;
   }
 
   setConfig(config: ISnakeConfig) {
@@ -179,7 +210,7 @@ export default class Snake {
 
     for (let i = 1; i < this.config.initialSnakeLength; i += 1) {
       body.push({
-        x: parseInt(`${this.ratio.x / 2}`, 10) + i,
+        x: parseInt(`${this.ratio.x / 2}`, 10) - i,
         y: parseInt(`${this.ratio.y / 2}`, 10),
       });
     }
@@ -255,6 +286,17 @@ export default class Snake {
       );
     }
 
+    for (const next of this.pathToFood) {
+      context.fillStyle = "#ccc";
+
+      context.fillRect(
+        next.x * this.config.gridSize + offsetX,
+        next.y * this.config.gridSize + offsetY,
+        this.config.gridSize,
+        this.config.gridSize
+      );
+    }
+
     context.globalAlpha = 1;
     context.fillStyle = "#2c4";
     context.beginPath();
@@ -286,6 +328,16 @@ export default class Snake {
     offsetY: number = 0
   ) {
     const head = JSON.parse(JSON.stringify(this.state.body[0]));
+    if (this.pathToFood.length) {
+      const next = JSON.parse(JSON.stringify(this.pathToFood[0]));
+      const direction = [next.x - head.x, next.y - head.y];
+
+      this.pathToFood.splice(0, 1);
+      if (arrayIsEqual(direction, [0, -1])) this.direction = 0;
+      if (arrayIsEqual(direction, [1, 0])) this.direction = 90;
+      if (arrayIsEqual(direction, [0, 1])) this.direction = 180;
+      if (arrayIsEqual(direction, [-1, 0])) this.direction = 270;
+    }
     if (this.direction === 0) {
       head.y -= 1;
     } else if (this.direction === 90) {
@@ -471,7 +523,7 @@ export default class Snake {
     }
 
     if (this.deaths === 0) {
-      this.firstAttempScore = this.currentScore;
+      this.firstAttemptScore = this.currentScore;
       this.brain.score = this.currentScore;
     }
 
@@ -495,5 +547,39 @@ export default class Snake {
       return;
     }
     if (eating) this.makeFood();
+  }
+
+  findFood() {
+    if (this.pathToFood.length) return;
+
+    // console.time(`${this.config.astarVersion}: ${this.config.heuristic}`);
+    if (this.config.astarVersion === 1) {
+      this.pathToFood = Astar({
+        grid: this.ratio,
+        start: this.state.body[0],
+        goal: this.state.food,
+        options: {
+          body: this.state.body,
+          heuristic: this.config.heuristic,
+          canEatSelf: this.config.canEatSelf,
+        },
+      }).slice(1);
+    }
+
+    if (this.config.astarVersion === 2) {
+      this.pathToFood = AstarV2.search(
+        this.grid,
+        this.state.body[0],
+        this.state.food,
+        {
+          body: this.state.body,
+          heuristic: this.config.heuristic,
+          canEatSelf: this.config.canEatSelf,
+          closest: true,
+        }
+      );
+    }
+
+    // console.timeEnd(`${this.config.astarVersion}: ${this.config.heuristic}`);
   }
 }

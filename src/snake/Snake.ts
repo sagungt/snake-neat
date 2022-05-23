@@ -6,62 +6,62 @@ interface ICoord {
 }
 
 interface IConfig {
+  growWhenEating: boolean;
   gridResolution: number;
+  borderWalls: boolean;
   displaySize: ICoord;
+  canEatSelf: boolean;
   initialSnakeLength?: any;
-  foodScore?: any;
   moveTowardsScore?: any;
   moveAwayScore?: any;
-  growWhenEating: boolean;
-  borderWalls: boolean;
-  canEatSelf: boolean;
+  foodScore?: any;
 }
 
 export default class Snake {
   public firstAttempScore: number;
-  private config: IConfig;
-  private state: any;
-  private canvas: any;
-  private brain: any;
   private currentScore: number;
+  private gamesPlayed: number;
+  private lastDirection: any;
   private bestScore: number;
-  private deaths: number;
   private maxDeaths: number;
   private highScore: number;
-  private gamesPlayed: number;
   private direction: number;
   private turnAngle: number;
-  private lastDirection: any;
   private lastDistance: any;
+  private config: IConfig;
+  private deaths: number;
   private dead: boolean;
-  private theta: any;
+  private canvas: any;
   private checks: any;
-  private data: any;
   private key: string;
+  private state: any;
+  private brain: any;
+  private theta: any;
+  private data: any;
 
   constructor(config: IConfig, genome?: any, canvas?: HTMLCanvasElement) {
-    this.config = config;
+    this.lastDirection = undefined;
     this.canvas = canvas || null;
     this.brain = genome || null;
-    this.state = {};
     if (this.brain) {
       this.brain.score = 0;
     }
-    this.currentScore = 0;
     this.firstAttempScore = 0;
+    this.currentScore = 0;
+    this.gamesPlayed = -1;
+    this.key = "straight";
+    this.config = config;
+    this.turnAngle = 90;
     this.bestScore = 0;
-    this.deaths = 0;
     this.maxDeaths = 0;
     this.highScore = 0;
-    this.gamesPlayed = -1;
     this.direction = 0;
-    this.turnAngle = 90;
-    this.lastDirection = undefined;
-    this.lastDistance = this.config.gridResolution;
-    this.dead = false;
-    this.theta = null;
     this.checks = null;
-    this.key = "straight";
+    this.theta = null;
+    this.dead = false;
+    this.state = {};
+    this.deaths = 0;
+    this.lastDistance = this.config.gridResolution;
     this.restart();
     this.makeFood();
   }

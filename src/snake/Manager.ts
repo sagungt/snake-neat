@@ -1,7 +1,8 @@
-import * as d3 from "d3";
+import { IManagerConfig } from "../interfaces";
 import { calculateQ } from "../helper/Helper";
 import Snake from "./TestSnake";
-import { IManagerConfig } from "../interfaces";
+import * as d3 from "d3";
+
 const neataptic = require("neataptic");
 
 const Neat = neataptic.Neat;
@@ -9,37 +10,39 @@ const Methods = neataptic.methods;
 const Architect = neataptic.architect;
 
 export default class Manager {
-  private neat: typeof Neat;
-  private snakes: Snake[];
-  private generationLog: Array<any>;
   private generationTimeLog: Array<any>;
+  private generationLog: Array<any>;
   private iterationCounter: number;
-  private mutationRate: number;
-  private inputSize: number;
   private startHiddenSize: number;
-  private outputSize: number;
-  private started: boolean;
-  private paused: boolean;
   private config: IManagerConfig;
+  private mutationRate: number;
+  private outputSize: number;
+  private neat: typeof Neat;
+  private inputSize: number;
+  private started: boolean;
+  private snakes: Snake[];
+  private paused: boolean;
 
   constructor(config: IManagerConfig) {
-    this.mutationRate = 0.3;
-    this.inputSize = 6;
     this.startHiddenSize = 1;
+    this.mutationRate = 0.3;
     this.outputSize = 3;
+    this.inputSize = 6;
 
-    this.started = false;
-    this.paused = false;
-    this.config = config;
-    this.snakes = [];
-    this.generationLog = [];
     this.generationTimeLog = [];
     this.iterationCounter = 0;
+    this.generationLog = [];
+    this.config = config;
+    this.started = false;
+    this.paused = false;
+    this.snakes = [];
   }
 
   getBestModel() {
-    // TODO export model + config
-    return this.neat.getFittest().toJSON();
+    return {
+      model: this.neat.getFittest().toJSON(),
+      config: this.config,
+    };
   }
 
   clearCanvas() {
@@ -65,19 +68,19 @@ export default class Manager {
 
     this.neat = new Neat(this.inputSize, this.outputSize, null, {
       mutations: [
-        Methods.mutation.ADD_NODE,
-        Methods.mutation.SUB_NODE,
-        Methods.mutation.ADD_CONN,
-        Methods.mutation.SUB_CONN,
-        Methods.mutation.MOD_WEIGHT,
-        Methods.mutation.MOD_BIAS,
         Methods.mutation.MOD_ACTIVATION,
-        Methods.mutation.ADD_GATE,
-        Methods.mutation.SUB_GATE,
         Methods.mutation.ADD_SELF_CONN,
         Methods.mutation.SUB_SELF_CONN,
         Methods.mutation.ADD_BACK_CONN,
         Methods.mutation.SUB_BACK_CONN,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.ADD_NODE,
+        Methods.mutation.SUB_NODE,
+        Methods.mutation.ADD_CONN,
+        Methods.mutation.SUB_CONN,
+        Methods.mutation.MOD_BIAS,
+        Methods.mutation.ADD_GATE,
+        Methods.mutation.SUB_GATE,
       ],
       popsize: this.config.populationSize,
       mutationRate: this.mutationRate,
@@ -134,8 +137,8 @@ export default class Manager {
     }
 
     tSnakes.sort((a: Snake, b: Snake) => {
-      if (a.firstAttempScore > b.firstAttempScore) return -1;
-      if (a.firstAttempScore < b.firstAttempScore) return 1;
+      if (a.firstAttemptScore > b.firstAttemptScore) return -1;
+      if (a.firstAttemptScore < b.firstAttemptScore) return 1;
       return 0;
     });
 
@@ -143,9 +146,9 @@ export default class Manager {
     let areAllAliveSnakesNegative = true;
 
     for (i in this.snakes) {
-      if (this.snakes[i].deaths === 0) {
+      if (this.snakes[i].getDeaths() === 0) {
         hasEveryoneDied = false;
-        if (this.snakes[i].currentScore > 0) {
+        if (this.snakes[i].getCurrentScore() > 0) {
           areAllAliveSnakesNegative = false;
         }
       }
@@ -177,7 +180,7 @@ export default class Manager {
         }
 
         newLog.push({
-          score: tSnakes[i].firstAttempScore,
+          score: tSnakes[i].firstAttemptScore,
           generation: this.generationLog.length,
           top,
         });
@@ -331,7 +334,10 @@ export default class Manager {
     const q1Line: any = [];
     const q3Line: any = [];
 
-    for (const [i, generation] of this.generationLog) {
+    for (const [i, generation] of this.generationLog.map((value, index) => [
+      index,
+      value,
+    ])) {
       medianLine.push({
         score: calculateQ(generation, 0.5),
         generation: parseInt(i, 10),

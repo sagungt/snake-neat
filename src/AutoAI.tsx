@@ -26,52 +26,54 @@ export default function AutoAI() {
     setPause(false);
   };
   return (
-    <div className="playground">
-      <div className="pause">
-        {play ? (
-          <>
-            <button className="btn btn-primary" onClick={pauseHandler}>
-              <i className="fa fa-pause"></i>
-            </button>
-            <button className="btn btn-danger" onClick={stopHandler}>
-              <i className="fa fa-stop"></i>
-            </button>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-
-      <div className="score">
-        {play ? (
-          <>
-            <h2>
-              Score : <span id="score"></span>
-            </h2>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-
-      <canvas id="playfield"></canvas>
-      <div className="menu-container">
-        <div className="back">
-          <Link to="/">
-            <i className="fa fa-arrow-left"></i>
-          </Link>
+    <>
+      <div className="playground">
+        <div className="pause">
+          {play ? (
+            <>
+              <button className="btn btn-primary" onClick={pauseHandler}>
+                <i className="fa fa-pause"></i>
+              </button>
+              <button className="btn btn-danger" onClick={stopHandler}>
+                <i className="fa fa-stop"></i>
+              </button>
+            </>
+          ) : (
+            ""
+          )}
         </div>
-        <div>
-          <div>
-            <h2 className="title">Play Snake Game with AI</h2>
+
+        <div className="score">
+          {play ? (
+            <>
+              <h2>
+                Score : <span id="score"></span>
+              </h2>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <canvas id="playfield"></canvas>
+        <div className="menu-container">
+          <div className="back">
+            <Link to="/">
+              <i className="fa fa-arrow-left"></i>
+            </Link>
           </div>
           <div>
-            <button className="btn btn-primary play" onClick={playHandler}>
-              {pause ? "Resume" : "Play"}
-            </button>
+            <div>
+              <h2 className="sub-title">Play Snake Game with AI</h2>
+            </div>
+            <div>
+              <button className="btn btn-primary play" onClick={playHandler}>
+                {pause ? "Resume" : "Play"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

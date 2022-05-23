@@ -199,135 +199,137 @@ export default function Play() {
   };
 
   return (
-    <div className="playground">
-      <div className="pause">
-        {play ? (
-          <>
-            <button className="btn btn-primary" onClick={pauseHandler}>
-              <i className="fa fa-pause"></i>
-            </button>
-            <button className="btn btn-danger" onClick={stopHandler}>
-              <i className="fa fa-stop"></i>
-            </button>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-
-      <div className="score">
-        {play ? (
-          <>
-            <h2>
-              Score :{" "}
-              <span ref={scoreElement}>{snake ? snake!.getScore() : 0}</span>
-            </h2>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-
-      <canvas id="playfield" ref={canvas} color="white"></canvas>
-      <div className="menu-container">
-        <div className="back">
-          <Link to="/">
-            <i className="fa fa-arrow-left"></i>
-          </Link>
-        </div>
-        <div>
-          <div>
-            <h2 className="title">Play Snake Game</h2>
-          </div>
-          <div>
-            <div className="togglers">
-              <Switch
-                disabled={pause}
-                value={config.borderWalls}
-                label="Snake dies when it hits a wall."
-                onToggle={() => {
-                  const newConfig = {
-                    ...config,
-                    borderWalls: !config.borderWalls,
-                  };
-                  setConfig(newConfig);
-                  // snake!.setConfig(newConfig);
-                }}
-              />
-
-              <Switch
-                disabled={pause}
-                value={config.canEatSelf}
-                label="Snake dies when it his itself."
-                onToggle={() => {
-                  const newConfig = {
-                    ...config,
-                    canEatSelf: !config.canEatSelf,
-                  };
-                  setConfig(newConfig);
-                  // snake.setConfig(newConfig);
-                }}
-              />
-
-              <Switch
-                disabled={pause}
-                value={config.growWhenEating}
-                label="Snake grows longer when it eats."
-                onToggle={() => {
-                  const newConfig = {
-                    ...config,
-                    growWhenEating: !config.growWhenEating,
-                  };
-                  setConfig(newConfig);
-                  // snake.setConfig(newConfig);
-                }}
-              />
-
-              <Switch
-                value={showGrid}
-                label="Show grid lines."
-                onToggle={() => {
-                  setShowGrid(!showGrid);
-                }}
-              />
-
-              <Switch
-                value={increment}
-                label="Auto increment snake speed."
-                onToggle={() => {
-                  setIncrement(!increment);
-                }}
-              />
-            </div>
-            <div className="sliders">
-              <Slider
-                disabled={pause}
-                value={-5}
-                max={-1}
-                min={-5}
-                name="Grid Scale"
-                description="Size of each Snake's grid environment (* 10px)."
-                onChangeEvent={onChangeGridSlider}
-              />
-              <Slider
-                disabled={pause}
-                value={-100}
-                max={-10}
-                min={-100}
-                step={10}
-                name="Snake Speed"
-                description="Snake speed in milliseconds."
-                onChangeEvent={onChangeSpeedSlider}
-              />
-            </div>
-            <div className="play-button">
-              <button className="btn btn-primary play" onClick={playHandler}>
-                {pause ? "Resume" : "Play"}
+    <>
+      <div className="playground">
+        <div className="pause">
+          {play ? (
+            <>
+              <button className="btn btn-primary" onClick={pauseHandler}>
+                <i className="fa fa-pause"></i>
               </button>
+              <button className="btn btn-danger" onClick={stopHandler}>
+                <i className="fa fa-stop"></i>
+              </button>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <div className="score">
+          {play ? (
+            <>
+              <h2>
+                Score :{" "}
+                <span ref={scoreElement}>{snake ? snake!.getScore() : 0}</span>
+              </h2>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <canvas id="playfield" ref={canvas} color="white"></canvas>
+        <div className="menu-container">
+          <div className="back">
+            <Link to="/">
+              <i className="fa fa-arrow-left"></i>
+            </Link>
+          </div>
+          <div>
+            <div>
+              <h2 className="sub-title">Play Snake Game</h2>
+            </div>
+            <div>
+              <div className="togglers">
+                <Switch
+                  disabled={pause}
+                  value={config.borderWalls}
+                  label="Snake dies when it hits a wall."
+                  onToggle={() => {
+                    const newConfig = {
+                      ...config,
+                      borderWalls: !config.borderWalls,
+                    };
+                    setConfig(newConfig);
+                    // snake!.setConfig(newConfig);
+                  }}
+                />
+
+                <Switch
+                  disabled={pause}
+                  value={config.canEatSelf}
+                  label="Snake dies when it his itself."
+                  onToggle={() => {
+                    const newConfig = {
+                      ...config,
+                      canEatSelf: !config.canEatSelf,
+                    };
+                    setConfig(newConfig);
+                    // snake.setConfig(newConfig);
+                  }}
+                />
+
+                <Switch
+                  disabled={pause}
+                  value={config.growWhenEating}
+                  label="Snake grows longer when it eats."
+                  onToggle={() => {
+                    const newConfig = {
+                      ...config,
+                      growWhenEating: !config.growWhenEating,
+                    };
+                    setConfig(newConfig);
+                    // snake.setConfig(newConfig);
+                  }}
+                />
+
+                <Switch
+                  value={showGrid}
+                  label="Show grid lines."
+                  onToggle={() => {
+                    setShowGrid(!showGrid);
+                  }}
+                />
+
+                <Switch
+                  value={increment}
+                  label="Auto increment snake speed."
+                  onToggle={() => {
+                    setIncrement(!increment);
+                  }}
+                />
+              </div>
+              <div className="sliders">
+                <Slider
+                  disabled={pause}
+                  value={-5}
+                  max={-1}
+                  min={-5}
+                  name="Grid Scale"
+                  description="Size of each Snake's grid environment (* 10px)."
+                  onChangeEvent={onChangeGridSlider}
+                />
+                <Slider
+                  disabled={pause}
+                  value={-100}
+                  max={-10}
+                  min={-100}
+                  step={10}
+                  name="Snake Speed"
+                  description="Snake speed in milliseconds."
+                  onChangeEvent={onChangeSpeedSlider}
+                />
+              </div>
+              <div className="play-button">
+                <button className="btn btn-primary play" onClick={playHandler}>
+                  {pause ? "Resume" : "Play"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

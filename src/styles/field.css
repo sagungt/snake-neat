@@ -1,70 +1,67 @@
 .field {
-  display: flex;
   flex-direction: column;
   align-items: stretch;
+  margin-bottom: 10px;
   text-align: left;
   margin-top: 10px;
-  margin-bottom: 10px;
+  display: flex;
 }
 .field .field-label {
-  opacity: 1;
   transition: opacity 200ms ease-in-out;
   text-transform: capitalize;
   font-weight: 700;
+  opacity: 1;
 }
 .field .field-label.field-label-hidden {
   opacity: 0;
 }
 .field .field-error {
-  height: 12px;
-  font-size: 12px;
   text-align: right;
   color: #c9302c;
+  font-size: 12px;
+  height: 12px;
 }
 .field .field-description {
-  height: 12px;
-  font-size: 12px;
   text-align: right;
   color: #4e545e;
+  font-size: 12px;
+  height: 12px;
 }
 .field textarea {
-  resize: none;
   padding-top: 6px;
   min-height: 42px;
+  resize: none;
 }
 .field .input {
-  margin: 4px;
-  padding: 12px;
-  font-size: 16px;
-  height: auto;
-  border-radius: 0.4em;
+  font-family: "Roboto Mono", monospace;
   border: 3px solid black;
-  overflow: hidden;
   box-shadow: 0.1em 0.1em;
+  border-radius: 0.4em;
+  overflow: hidden;
+  font-size: 16px;
+  padding: 12px;
+  height: auto;
+  margin: 4px;
 }
 .field .input.input-jumbo {
-  font-size: 50px;
-  border: none;
   font-weight: 700;
   background: none;
+  font-size: 50px;
+  border: none;
 }
 .field .input.input-jumbo::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
   color: #000;
   opacity: 0.5;
 }
 .field .input.input-jumbo::-moz-placeholder {
-  /* Firefox 19+ */
   color: #000;
   opacity: 0.5;
 }
 .field .input.input-jumbo:-ms-input-placeholder {
-  /* IE 10+ */
   color: #000;
   opacity: 0.5;
 }
 .field .input.input-jumbo:-moz-placeholder {
-  /* Firefox 18- */
   color: #000;
   opacity: 0.5;
 }
@@ -76,25 +73,21 @@
   opacity: 0.5;
 }
 .field .input:focus {
-  outline: none;
   border-color: #32c094;
+  outline: none;
 }
 .field .input:focus.input-error {
   border-color: #c9302c;
 }
 .field .input::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
   color: #c0c7d3;
 }
 .field .input::-moz-placeholder {
-  /* Firefox 19+ */
   color: #c0c7d3;
 }
 .field .input:-ms-input-placeholder {
-  /* IE 10+ */
   color: #c0c7d3;
 }
 .field .input:-moz-placeholder {
-  /* Firefox 18- */
   color: #c0c7d3;
 }

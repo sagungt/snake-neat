@@ -11,15 +11,17 @@ export interface ITwoCoordinate {
 }
 
 export interface ISnakeConfig {
-  gridSize: number;
   displaySize: ICoordinate;
   growWhenEating: boolean;
   borderWalls: boolean;
   canEatSelf: boolean;
+  gridSize: number;
   initialSnakeLength?: any;
-  foodScore?: any;
   moveTowardsScore?: any;
+  astarVersion?: number;
   moveAwayScore?: any;
+  foodScore?: any;
+  heuristic?: string;
 }
 
 export interface IManagerConfig extends ISnakeConfig {
@@ -27,4 +29,11 @@ export interface IManagerConfig extends ISnakeConfig {
   elitismPercent: number;
   showGraphLog: boolean;
   hiddenNodes?: number;
+}
+
+export interface IAstar {
+  start: ICoordinate;
+  grid: ICoordinate;
+  goal: ICoordinate;
+  options?: any;
 }

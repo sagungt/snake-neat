@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import "../styles/field.css";
 
 interface Props {
-  type: string;
-  name: string;
-  value: number;
-  required: boolean;
+  onChangeEvent: Function;
   placeholder: string;
   description: string;
-  onChangeEvent: Function;
-  min?: number;
-  max?: number;
-  step?: number;
+  required: boolean;
+  value: number;
+  type: string;
+  name: string;
   disabled?: boolean;
   minLength?: number;
   maxLength?: number;
+  step?: number;
+  min?: number;
+  max?: number;
 }
 
 export default function Field(props: Props) {
@@ -22,7 +22,7 @@ export default function Field(props: Props) {
   const [error, setError] = useState<undefined | string>(undefined);
   const [changeCounter, setChangeCounter] = useState(0);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const currentValue = e.currentTarget.value;
 
     setValue(currentValue);
@@ -63,36 +63,38 @@ export default function Field(props: Props) {
   };
 
   return (
-    <div className="field">
-      <div>
-        <span className="field-label">
-          {(props.placeholder || props.name) + (props.required ? " *" : "")}
-        </span>
+    <>
+      <div className="field">
+        <div>
+          <span className="field-label">
+            {(props.placeholder || props.name) + (props.required ? " *" : "")}
+          </span>
+        </div>
+        <input
+          className="input"
+          type={props.type || "text"}
+          name={props.name}
+          value={value}
+          onChange={handleChange}
+          placeholder={
+            (props.placeholder || props.name) + (props.required ? " *" : "")
+          }
+          disabled={props.disabled}
+          required={props.required}
+          min={props.min}
+          max={props.max}
+          step={props.step}
+        />
+        {error ? (
+          <div className="field-error">
+            <span>{error}</span>
+          </div>
+        ) : (
+          <div className="field-description">
+            <span>{props.description}</span>
+          </div>
+        )}
       </div>
-      <input
-        className="input"
-        type={props.type || "text"}
-        name={props.name}
-        value={value}
-        onChange={handleChange}
-        placeholder={
-          (props.placeholder || props.name) + (props.required ? " *" : "")
-        }
-        disabled={props.disabled}
-        required={props.required}
-        min={props.min}
-        max={props.max}
-        step={props.step}
-      />
-      {error ? (
-        <div className="field-error">
-          <span>{error}</span>
-        </div>
-      ) : (
-        <div className="field-description">
-          <span>{props.description}</span>
-        </div>
-      )}
-    </div>
+    </>
   );
 }

@@ -19,7 +19,8 @@
   justify-content: space-between;
 }
 
-.title {
+.title,
+.sub-title {
   text-align: center;
   font-size: 3rem;
 }
@@ -72,6 +73,12 @@
   margin-top: 10px;
 }
 
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .sliders {
   flex-direction: column;
   padding: 10px;
@@ -88,18 +95,36 @@
 }
 
 @media only screen and (max-width: 768px) {
-  .title {
-    margin-top: 80px;
+  .sub-title {
+    margin: 10px 10px 10px 100px;
+    text-align: left;
+    font-size: 32px;
   }
 
   .menu-container {
     height: auto;
     min-width: 90%;
+    position: relative;
+    margin-top: 100px;
   }
+
+  /* .menu-list {
+    height: auto;
+  } */
 
   .menu-container div div:nth-child(2) {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  canvas {
+    margin-top: 50px;
   }
 }
