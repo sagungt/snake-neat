@@ -84,7 +84,7 @@ export default function Factory() {
     <>
       <div className="App">
         <div className="control-menu">
-          <Link to={"/"} className="btn btn-primary">
+          <Link to={"/snake-neat"} className="btn btn-primary">
             Go to Menu
           </Link>
           {running && !paused ? (

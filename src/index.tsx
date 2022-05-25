@@ -13,11 +13,11 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="auto-astar" element={<AutoAstar />} />
-        <Route path="auto-ai" element={<AutoAI />} />
-        <Route path="play" element={<Play />} />
-        <Route path="train" element={<Factory />} />
+        <Route path="/snake-neat" element={<App />} />
+        <Route path="/snake-neat/auto-astar" element={<AutoAstar />} />
+        <Route path="/snake-neat/auto-ai" element={<AutoAI />} />
+        <Route path="/snake-neat/play" element={<Play />} />
+        <Route path="/snake-neat/train" element={<Factory />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

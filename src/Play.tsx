@@ -232,7 +232,7 @@ export default function Play() {
         <canvas id="playfield" ref={canvas} color="white"></canvas>
         <div className="menu-container">
           <div className="back">
-            <Link to="/">
+            <Link to="/snake-neat">
               <i className="fa fa-arrow-left"></i>
             </Link>
           </div>

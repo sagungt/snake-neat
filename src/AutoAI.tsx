@@ -213,7 +213,7 @@ export default function AutoAI() {
         <canvas id="playfield" ref={canvas}></canvas>
         <div className="menu-container" ref={menuContainer}>
           <div className="back">
-            <Link to="/">
+            <Link to="/snake-neat">
               <i className="fa fa-arrow-left"></i>
             </Link>
           </div>

@@ -110,16 +110,16 @@ export default function App() {
             <h1 className="title">Snake Neat</h1>
           </div>
           <div className="menu-list">
-            <Link to={"/play"} id="play">
+            <Link to={"/snake-neat/play"} id="play">
               Play
             </Link>
-            <Link to={"/train"} id="train">
+            <Link to={"/snake-neat/train"} id="train">
               Train Snake
             </Link>
-            <Link to={"/auto-astar"} id="autoplay-astar">
+            <Link to={"/snake-neat/auto-astar"} id="autoplay-astar">
               Autoplay with A*
             </Link>
-            <Link to={"/auto-ai"} id="autoplay-ai">
+            <Link to={"/snake-neat/auto-ai"} id="autoplay-ai">
               Autoplay with AI
             </Link>
           </div>
