@@ -49,6 +49,7 @@ export default function AutoAstar() {
   });
   const canvas = useRef<HTMLCanvasElement>(null);
   const scoreElement = useRef<HTMLSpanElement>(null);
+  const menuContainer = useRef<HTMLDivElement>(null);
   const [increment, setIncrement] = useState(false);
   const [gridSize, setGridSize] = useState(10 * 5);
   const [showGrid, setShowGrid] = useState(true);
@@ -166,7 +167,7 @@ export default function AutoAstar() {
   };
 
   const playHandler = () => {
-    document.querySelector(".menu-container")?.classList.toggle("hide");
+    menuContainer.current?.classList.toggle("hide");
     setPlay(true);
     setPause(false);
     if (snake === undefined) snakeInit();
@@ -174,14 +175,14 @@ export default function AutoAstar() {
   };
 
   const pauseHandler = () => {
-    document.querySelector(".menu-container")?.classList.toggle("hide");
+    menuContainer.current?.classList.toggle("hide");
     setPlay(false);
     setPause(true);
     clearInterval(loop);
   };
 
   const stopHandler = () => {
-    document.querySelector(".menu-container")?.classList.toggle("hide");
+    menuContainer.current?.classList.toggle("hide");
     setPlay(false);
     setPause(false);
     canvasSetup();
@@ -219,7 +220,7 @@ export default function AutoAstar() {
         </div>
 
         <canvas id="playfield" ref={canvas}></canvas>
-        <div className="menu-container">
+        <div className="menu-container" ref={menuContainer}>
           <div className="back">
             <Link to="/">
               <i className="fa fa-arrow-left"></i>
@@ -229,7 +230,7 @@ export default function AutoAstar() {
             <div>
               <h2 className="sub-title">Play Snake Game with A*</h2>
             </div>
-            <div>
+            <div className="config">
               <div className="togglers">
                 <Switch
                   disabled={pause}

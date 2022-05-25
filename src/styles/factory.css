@@ -201,3 +201,19 @@ hr {
   background: #751c1a;
   transform: translate(0.05em, 0.05em);
 }
+
+.link {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node {
+  cursor: move;
+  fill: #ccc;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node.fixed {
+  fill: #f00;
+}

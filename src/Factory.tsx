@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { IManagerConfig } from "./interfaces";
+import { useState, useEffect } from "react";
 import Slider from "./components/Slider";
 import Switch from "./components/Switch";
+import { Link } from "react-router-dom";
 import Field from "./components/Field";
 import Manager from "./snake/Manager";
 import "./styles/factory.css";
+import { setStorageValue } from "./helper/Helper";
 
 let manager: Manager;
 
@@ -54,9 +55,11 @@ export default function Factory() {
     manager.resume();
   };
 
-  // TODO implement save config and model
   const getBestModel = () => {
-    console.log(manager.getBestModel());
+    const date = new Date();
+    const bestModel = manager.getBestModel();
+    setStorageValue(`Model-${date.getTime()}`, bestModel);
+    alert("Model Saved in localStorage : Model-" + date.getTime());
   };
 
   const menuToggler = () => {
@@ -234,7 +237,6 @@ export default function Factory() {
                 gridSize: v || 1,
                 displaySize: { x: v * 20, y: v * 20 },
               });
-              console.log(config);
               if (manager) manager.updateSettings(config);
             }}
             description="Size of each Snake's grid environment."

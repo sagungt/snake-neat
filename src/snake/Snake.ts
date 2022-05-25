@@ -356,8 +356,6 @@ export default class Snake {
 
     let eating = false;
     if (!died) {
-      // console.log(this.currentScore);
-
       if (head.x === this.state.food.x && head.y === this.state.food.y) {
         eating = true;
 

@@ -16,13 +16,15 @@
 .menu-container div div:nth-child(2) {
   display: flex;
   gap: 20px;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
 
 .title,
 .sub-title {
   text-align: center;
   font-size: 3rem;
+  /* -webkit-text-stroke: 1px #000; */
 }
 
 .hide {
@@ -77,6 +79,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .sliders {
@@ -94,6 +97,18 @@
   flex: 1;
 }
 
+.config {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.select-list {
+  width: 100%;
+  margin: auto;
+}
+
 @media only screen and (max-width: 768px) {
   .sub-title {
     margin: 10px 10px 10px 100px;
@@ -108,11 +123,11 @@
     margin-top: 100px;
   }
 
-  /* .menu-list {
-    height: auto;
-  } */
+  .select-list {
+    width: 90%;
+  }
 
-  .menu-container div div:nth-child(2) {
+  .config {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -122,6 +137,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
   }
 
   canvas {

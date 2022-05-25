@@ -18,6 +18,12 @@ select {
   height: auto;
   padding: 4px;
   margin: 4px;
+  background-color: #fff;
+}
+
+select:disabled {
+  background-color: #ccc;
+  opacity: 0.6;
 }
 
 .select-label {

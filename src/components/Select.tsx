@@ -13,13 +13,13 @@ interface Props {
   disabled: boolean;
   label: string;
   name: string;
+  style?: object;
 }
 
 export default function Select(props: Props) {
-  const recommendedValue = props.options.filter(
-    (option: Option) => option.recommended
-  )[0];
-  const [value, setValue] = useState(recommendedValue.value);
+  const recommendedValue =
+    props.options.filter((option: Option) => option.recommended)[0] || false;
+  const [value, setValue] = useState(recommendedValue.value || "");
   const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newValue = event.target.value;
     setValue(newValue);
@@ -34,6 +34,7 @@ export default function Select(props: Props) {
         className="select"
         name={props.name}
         disabled={props.disabled}
+        style={props.style}
       >
         {props.options.map((option: any, id: number) => {
           return (

@@ -20,7 +20,7 @@ export default class Manager {
   private neat: typeof Neat;
   private inputSize: number;
   private started: boolean;
-  private snakes: Snake[];
+  private snakes: Array<Snake>;
   private paused: boolean;
 
   constructor(config: IManagerConfig) {
@@ -39,6 +39,9 @@ export default class Manager {
   }
 
   getBestModel() {
+    // const scores = this.snakes.map((snake: Snake) => snake.getScore());
+    // const bestSnake = scores.indexOf(Math.max(...scores));
+
     return {
       model: this.neat.getFittest().toJSON(),
       config: this.config,
@@ -222,7 +225,8 @@ export default class Manager {
       newPopulation.push(this.neat.population[i]);
     }
 
-    for (i = 0; i < this.neat.popsize - this.neat.elitism; i += 1) {
+    const elitism = this.neat.popsize - this.neat.elitism;
+    for (i = 0; i < elitism; i += 1) {
       newPopulation.push(this.neat.getOffspring());
     }
 

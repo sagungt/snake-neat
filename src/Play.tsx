@@ -11,11 +11,11 @@ let loop: NodeJS.Timer;
 
 export default function Play() {
   const [gridSize, setGridSize] = useState(10 * 5);
-  const [play, setPlay] = useState(false);
-  const [speed, setSpeed] = useState(100);
-  const [pause, setPause] = useState(false);
-  const [showGrid, setShowGrid] = useState(true);
   const [increment, setIncrement] = useState(false);
+  const [showGrid, setShowGrid] = useState(true);
+  const [pause, setPause] = useState(false);
+  const [speed, setSpeed] = useState(100);
+  const [play, setPlay] = useState(false);
   const [config, setConfig] = useState<ISnakeConfig>({
     gridSize: 10 * 5,
     displaySize: {
@@ -32,19 +32,19 @@ export default function Play() {
 
   const moveHandler = ({ key }: KeyboardEvent) => {
     if (!snake) return;
-    let direction = 90;
+    let direction = 270;
     switch (key) {
       case "ArrowUp":
         direction = 0;
         break;
       case "ArrowRight":
-        direction = 90;
+        direction = 270;
         break;
       case "ArrowDown":
         direction = 180;
         break;
       case "ArrowLeft":
-        direction = 270;
+        direction = 90;
         break;
       default:
         break;
@@ -240,7 +240,7 @@ export default function Play() {
             <div>
               <h2 className="sub-title">Play Snake Game</h2>
             </div>
-            <div>
+            <div className="config">
               <div className="togglers">
                 <Switch
                   disabled={pause}

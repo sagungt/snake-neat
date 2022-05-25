@@ -142,11 +142,42 @@ const inSet = (item: any, set: Set<any>): boolean => {
 const inArray = (item: any, array: Array<any>): boolean =>
   array.map((val: any) => val.toString()).indexOf(item.toString()) !== -1;
 
+const getStorageValue = (key: string) => {
+  const saved = localStorage.getItem(key) || "";
+  // const initial = JSON.parse(saved);
+  return saved;
+};
+
+const listStorage = () => {
+  const localStorageLength = localStorage.length;
+  const storage = [];
+  if (localStorageLength) {
+    for (let i = 0; i < localStorageLength; i += 1) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("Model")) {
+        storage.push({
+          value: key!,
+          recommended: false,
+          description: key!,
+        });
+      }
+    }
+  }
+  return storage;
+};
+
+const setStorageValue = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
 export {
   objectValuesToArray,
   radiansToDegrees,
+  getStorageValue,
+  setStorageValue,
   angleToPoint,
   arrayIsEqual,
+  listStorage,
   calculateQ,
   manhattan,
   euclidean,

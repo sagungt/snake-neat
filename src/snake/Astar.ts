@@ -59,12 +59,7 @@ export default function Astar({
 
     for (const item of neighbors) {
       const neighbor: any = [current[0] + item[0], current[1] + item[1]];
-      const tentativeGScore =
-        gScore[current] +
-        heuristicFunction(
-          { x: current[0], y: current[1] },
-          { x: neighbor[0], y: neighbor[1] }
-        );
+
       if (0 <= neighbor[0] && neighbor[0] < grid.x) {
         if (0 <= neighbor[1] && neighbor[1] < grid.y) {
           if (options.canEatSelf) {
@@ -81,6 +76,13 @@ export default function Astar({
           }
         } else continue;
       } else continue;
+
+      const tentativeGScore =
+        gScore[current] +
+        heuristicFunction(
+          { x: current[0], y: current[1] },
+          { x: neighbor[0], y: neighbor[1] }
+        );
 
       if (inSet(neighbor, close) && tentativeGScore >= (gScore[neighbor] || 0))
         continue;

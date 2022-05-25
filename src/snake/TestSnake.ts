@@ -49,7 +49,7 @@ export default class Snake {
     this.gamesPlayed = -1;
     this.config = config;
     this.pathToFood = [];
-    this.direction = 90;
+    this.direction = 270;
     this.turnAngle = 90;
     this.bestScore = 0;
     this.checks = null;
@@ -107,6 +107,7 @@ export default class Snake {
       x2: this.state.food.x,
       y2: this.state.food.y,
     });
+
     const d = radiansToDegrees(a);
     let theta = d + 90;
 
@@ -155,7 +156,7 @@ export default class Snake {
       ];
     }
 
-    for (let check of this.checks) {
+    for (const check of this.checks) {
       const tx = check.x + head.x;
       const ty = check.y + head.y;
 
@@ -222,7 +223,7 @@ export default class Snake {
     };
 
     this.currentScore = 0;
-    this.direction = 90;
+    this.direction = 270;
     this.gamesPlayed += 1;
     this.lastDistance = this.config.displaySize.x / this.config.gridSize;
   }
@@ -236,7 +237,7 @@ export default class Snake {
         y: parseInt(`${this.ratio.y * Math.random()}`, 10),
       };
       let found = false;
-      for (let body of this.state.body) {
+      for (const body of this.state.body) {
         if (body.x === tfood.x && body.y === tfood.y) {
           found = true;
           break;
@@ -265,18 +266,22 @@ export default class Snake {
     offsetY: number = 0
   ) {
     context.clearRect(
-      offsetX,
-      offsetY,
-      this.config.displaySize.x,
-      this.config.displaySize.y
+      offsetX - 1,
+      offsetY - 1,
+      this.config.displaySize.x + 1,
+      this.config.displaySize.y + 1
     );
 
     context.fillStyle = "#000";
     if (this.deaths > 0) context.fillStyle = "#bbb";
 
-    for (let body of this.state.body) {
-      context.globalAlpha =
-        (this.state.body.length - 1) / this.state.body.length / 2 + 0.5;
+    const indexedBody = this.state.body.map((body: any, index: number) => [
+      index,
+      body,
+    ]);
+    const bodyLength = this.state.body.length;
+    for (const [index, body] of indexedBody) {
+      context.globalAlpha = (bodyLength - index) / bodyLength / 2 + 0.5;
 
       context.fillRect(
         body.x * this.config.gridSize + offsetX,
@@ -334,18 +339,42 @@ export default class Snake {
 
       this.pathToFood.splice(0, 1);
       if (arrayIsEqual(direction, [0, -1])) this.direction = 0;
-      if (arrayIsEqual(direction, [1, 0])) this.direction = 90;
+      if (arrayIsEqual(direction, [-1, 0])) this.direction = 90;
       if (arrayIsEqual(direction, [0, 1])) this.direction = 180;
-      if (arrayIsEqual(direction, [-1, 0])) this.direction = 270;
+      if (arrayIsEqual(direction, [1, 0])) this.direction = 270;
     }
+    if (this.brain) {
+      const moveOdds = this.brain.activate(this.data);
+      const max = moveOdds.indexOf(Math.max(...moveOdds));
+
+      switch (max) {
+        case 0:
+          this.key = "left";
+          this.direction += this.turnAngle;
+          break;
+        case 1:
+          this.key = "straight";
+          break;
+        case 2:
+          this.key = "right";
+          this.direction -= this.turnAngle;
+          break;
+        default:
+          break;
+      }
+
+      if (this.direction < 0) this.direction += 360;
+      this.direction = this.direction % 360;
+    }
+
     if (this.direction === 0) {
       head.y -= 1;
     } else if (this.direction === 90) {
-      head.x += 1;
+      head.x -= 1;
     } else if (this.direction === 180) {
       head.y += 1;
     } else if (this.direction === 270) {
-      head.x -= 1;
+      head.x += 1;
     }
 
     let died = false;
@@ -364,7 +393,8 @@ export default class Snake {
     }
 
     if (this.state.body.length > 1 && this.config.canEatSelf) {
-      for (let i = 2; i < this.state.body.length; i += 1) {
+      const bodyLength = this.state.body.length;
+      for (let i = 2; i < bodyLength; i += 1) {
         if (
           head.x === this.state.body[i].x &&
           head.y === this.state.body[i].y
@@ -396,7 +426,7 @@ export default class Snake {
       );
       context.fillStyle = "rgba(255,0,0,.5)";
 
-      for (let body of this.state.body) {
+      for (const body of this.state.body) {
         context.fillRect(
           body.x * this.config.gridSize + offsetX,
           body.y * this.config.gridSize + offsetY,
@@ -478,7 +508,8 @@ export default class Snake {
     }
 
     if (this.state.body.length > 1 && this.config.canEatSelf) {
-      for (let i = 2; i < this.state.body.length; i += 1) {
+      const bodyLength = this.state.body.length;
+      for (let i = 2; i < bodyLength; i += 1) {
         if (
           head.x === this.state.body[i].x &&
           head.y === this.state.body[i].y
@@ -531,7 +562,7 @@ export default class Snake {
       context.clearRect(0, 0, 100, 100);
       context.fillStyle = "rgba(255,0,0,.5)";
 
-      for (let body of this.state.body) {
+      for (const body of this.state.body) {
         context.fillRect(
           body.x * this.config.gridSize,
           body.y * this.config.gridSize,
