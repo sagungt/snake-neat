@@ -226,6 +226,7 @@ export default function Factory() {
           />
 
           <Field
+            disabled={running}
             type="number"
             name="gridSize"
             placeholder="Grid Size (in px)"
@@ -245,7 +246,7 @@ export default function Factory() {
           />
 
           <Field
-            disabled={true}
+            disabled={running}
             type="number"
             name="displaySize"
             placeholder="Display Size (in px)"
@@ -317,7 +318,10 @@ export default function Factory() {
                 <span>
                   Generation <span id="gen"></span>{" "}
                   <small>
-                    <i>(it may slowing down your browser)</i>
+                    <i>
+                      (Training process is client side, it may slowing down your
+                      device)
+                    </i>
                   </small>
                 </span>
               ) : (

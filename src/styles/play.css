@@ -140,7 +140,7 @@
     flex-direction: row;
   }
 
-  canvas {
+  #playfield {
     margin-top: 50px;
   }
 }

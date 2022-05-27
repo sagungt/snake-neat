@@ -28,8 +28,8 @@ export default class Snake {
   private checks: any;
   private key: string;
   private grid!: Grid;
-  private brain: any;
   private state: any;
+  public brain: any;
   private data: any;
 
   constructor(config: ISnakeConfig, genome?: any) {
@@ -130,30 +130,19 @@ export default class Snake {
     const head = JSON.parse(JSON.stringify(this.state.body[0]));
     this.checks = [];
 
+    const up = { x: 0, y: -1 };
+    const left = { x: -1, y: 0 };
+    const right = { x: 1, y: 0 };
+    const down = { x: 0, y: 1 };
+
     if (this.direction === 0) {
-      this.checks = [
-        { x: -1, y: 0 },
-        { x: 0, y: -1 },
-        { x: 1, y: 0 },
-      ];
+      this.checks = [up, left, right];
     } else if (this.direction === 90) {
-      this.checks = [
-        { x: 0, y: 1 },
-        { x: -1, y: 0 },
-        { x: 0, y: -1 },
-      ];
-    } else if (this.direction === 270) {
-      this.checks = [
-        { x: 0, y: -1 },
-        { x: 1, y: 0 },
-        { x: 0, y: 1 },
-      ];
+      this.checks = [left, down, up];
     } else if (this.direction === 180) {
-      this.checks = [
-        { x: 1, y: 0 },
-        { x: 0, y: 1 },
-        { x: -1, y: 0 },
-      ];
+      this.checks = [down, right, left];
+    } else if (this.direction === 270) {
+      this.checks = [right, down, up];
     }
 
     for (const check of this.checks) {

@@ -323,7 +323,7 @@ export default function AutoAI() {
                 </button>
                 {!pause && (
                   <Link
-                    to={"/train"}
+                    to={"/snake-neat/train"}
                     className="btn btn-primary"
                     style={{
                       height: "2.4em",

@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import Controller from "./components/Controller";
 import Slider from "./components/Slider";
 import Switch from "./components/Switch";
 import Snake from "./snake/TestSnake";
 import { ISnakeConfig } from "./interfaces";
 import "./styles/play.css";
+import { useMediaQuery, Direction } from "./helper/Helper";
 
 let snake: Snake | undefined;
 let loop: NodeJS.Timer;
 
 export default function Play() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const [isFullscreen, setIsFullscreen] = useState(true);
   const [gridSize, setGridSize] = useState(10 * 5);
   const [increment, setIncrement] = useState(false);
   const [showGrid, setShowGrid] = useState(true);
@@ -20,7 +24,7 @@ export default function Play() {
     gridSize: 10 * 5,
     displaySize: {
       x: window.innerWidth,
-      y: window.innerHeight,
+      y: window.innerHeight / (isFullscreen ? 1 : 2),
     },
     growWhenEating: true,
     borderWalls: true,
@@ -30,7 +34,7 @@ export default function Play() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const scoreElement = useRef<HTMLSpanElement>(null);
 
-  const moveHandler = ({ key }: KeyboardEvent) => {
+  const keyboardMoveHandler = ({ key }: KeyboardEvent) => {
     if (!snake) return;
     let direction = 270;
     switch (key) {
@@ -52,6 +56,31 @@ export default function Play() {
     if (Math.abs(snake!.getDirection() - direction) === 180) return;
     setTimeout(() => {
       snake!.setDirection(direction);
+    }, 50);
+  };
+
+  const buttonMoveHandler = (direction: Direction) => {
+    if (!snake) return;
+    let newDirection: number;
+    switch (direction) {
+      case Direction.UP:
+        newDirection = 0;
+        break;
+      case Direction.LEFT:
+        newDirection = 90;
+        break;
+      case Direction.RIGHT:
+        newDirection = 270;
+        break;
+      case Direction.DOWN:
+        newDirection = 180;
+        break;
+      default:
+        break;
+    }
+    if (Math.abs(snake!.getDirection() - newDirection!) === 180) return;
+    setTimeout(() => {
+      snake!.setDirection(newDirection);
     }, 50);
   };
 
@@ -98,7 +127,7 @@ export default function Play() {
     const canvasCtx = canvas.current?.getContext(
       "2d"
     ) as CanvasRenderingContext2D;
-    canvas.current!.height = window.innerHeight;
+    canvas.current!.height = window.innerHeight / (isFullscreen ? 1 : 2);
     canvas.current!.width = window.innerWidth;
     const width = canvas.current!.width - (canvas.current!.width % gridSize);
     const height = canvas.current!.height - (canvas.current!.height % gridSize);
@@ -110,13 +139,13 @@ export default function Play() {
     canvasCtx?.fillRect(adjustedWidth, adjustedHeight, width, height);
     if (snake) snake!.showCanvas(canvasCtx, adjustedWidth, adjustedHeight);
     if (showGrid) drawGrid(canvasCtx, width, height, ratio);
-  }, [gridSize, showGrid, drawGrid]);
+  }, [gridSize, showGrid, drawGrid, isFullscreen]);
 
   useEffect(() => {
     document.title = "Play Snake";
     canvasSetup();
-    window.addEventListener("keydown", moveHandler);
-  }, [gridSize, canvasSetup]);
+    window.addEventListener("keydown", keyboardMoveHandler);
+  }, [gridSize, canvasSetup, isMobile]);
 
   const onChangeGridSlider = (val: number) => {
     const size = Math.abs(val) * 10;
@@ -229,7 +258,13 @@ export default function Play() {
           )}
         </div>
 
-        <canvas id="playfield" ref={canvas} color="white"></canvas>
+        <canvas
+          id="playfield"
+          ref={canvas}
+          color="white"
+          style={{ alignSelf: "self-start" }}
+        ></canvas>
+        {isMobile && <Controller onClickEvent={buttonMoveHandler} />}
         <div className="menu-container">
           <div className="back">
             <Link to="/snake-neat">
@@ -299,6 +334,17 @@ export default function Play() {
                     setIncrement(!increment);
                   }}
                 />
+                {isMobile && (
+                  <Switch
+                    disabled={pause}
+                    value={isFullscreen}
+                    label="Fullscreen"
+                    onToggle={() => {
+                      setIsFullscreen(!isFullscreen);
+                      canvasSetup();
+                    }}
+                  />
+                )}
               </div>
               <div className="sliders">
                 <Slider

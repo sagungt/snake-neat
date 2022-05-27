@@ -1,4 +1,5 @@
 import { ICoordinate, ITwoCoordinate } from "../interfaces";
+import { useState, useEffect } from "react";
 
 /**
  * Calculate distance between two coordinate
@@ -170,17 +171,42 @@ const setStorageValue = (key: string, value: any) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
+enum Direction {
+  UP = "UP",
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+  DOWN = "DOWN",
+}
+
 export {
   objectValuesToArray,
   radiansToDegrees,
   getStorageValue,
   setStorageValue,
+  useMediaQuery,
   angleToPoint,
   arrayIsEqual,
   listStorage,
   calculateQ,
   manhattan,
   euclidean,
+  Direction,
   distance,
   inObject,
   inArray,
