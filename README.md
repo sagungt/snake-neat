@@ -1,5 +1,9 @@
 # Getting Started with Create React App
 
+Snake manager logic by [pbinggeser](https://github.com/pbinggeser/snake-ai) | [article](https://towardsdatascience.com/train-ai-to-play-snake-in-your-browser-ca657097d707)
+
+AstarV2 algorithm by [bgrins](https://github.com/bgrins/javascript-astar)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
